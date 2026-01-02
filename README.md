@@ -192,3 +192,63 @@ devops-test
 - ✅ Перед удалением выводит список найденных файлов и запрашивает подтверждение (`Y/N`).
 - 📸 Зафиксировать результат скриншотами (`help`, `demo`) в `docs/screenshots/B1`.
 - 📝 Описать всё в этом README.md и выложить в GitHub репозиторий `devops-test`.
+
+---
+
+## 🚀 Запуск Git сценария B2
+Git сценарий предполагает работу с ветками, стешем и переименованием коммитов:
+
+
+
+## 🚀 Выполнение Git сценария B2
+
+Описание выполнения гит-сценария с работой в нескольких ветках, стешем и переименованием коммитов:
+
+```bash
+# Шаг 1: создать новую ветку feature/junior-task
+git checkout -b feature/junior-task
+
+# Шаг 2: сделать изменения в ветке и скоммитить
+echo "исправленная фича" > feature_changes.txt
+git add feature_changes.txt
+git commit -m "Implement junior-task feature"
+
+# Шаг 3: сохранить некоммиттед изменения
+git stash
+
+# Шаг 4: переключиться на main
+git checkout main
+
+# Шаг 5: сделать вместе исправления на main
+echo "сборки" > main_changes.txt
+git add main_changes.txt
+git commit -m "Update main branch"
+
+# Шаг 6: вернуться на feature ветку
+git checkout feature/junior-task
+
+# Шаг 7: восстановить сохранённые при стеш изменения
+git stash pop
+
+# Шаг 8: переименовать последний коммит
+git commit --amend -m "Refined junior-task implementation"
+```
+
+По завершении всех шагов приложен скриншот, который показывает все этапы эксекуции.
+
+<p align="center"><em>Screenshots B2</em></p>
+
+<p align="center"><img src="docs/screenshots/B2/B2-git-scenario-complete.jpg" alt="B2 git scenario" width="75%"></p>
+---
+
+## 📋 Кратко о задании B2
+
+- 🔀 Создать ветку `feature/junior-task` с коммитом и сохранить изменения в стеш.
+- 🔄 Переключиться на `main`, внести изменения и коммитить.
+- 🔙 Вернуться на `feature/junior-task` и восстановить изменения из стеша.
+- ✏️ Переименовать последний коммит с использованием `git commit --amend`.
+- 📸 Зафиксировать результат скриншотом в `docs/screenshots/B2`.
+
+<p align="center"><em>Screenshots B2</em></p>
+<p align="center"><img src="docs/screenshots/B2/B2-git-scenario-complete.jpg" alt="B2 git scenario" width="75%"></p>
+
