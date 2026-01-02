@@ -33,41 +33,54 @@ jobs:
 
       - name: Notify Telegram on success
         if: ${{ success() }}
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          REPO: ${{ github.repository }}
+          COMMIT: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          RUN_ID: ${{ github.run_id }}
+          USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --data-urlencode "text=✅ CI Pipeline завершён успешно!
+          TEXT="✅ CI Pipeline завершён успешно!
 
 📊 Детали:
-Репозиторий: ${{ github.repository }}
+Репозиторий: $REPO
 Ветка: main
-Коммит: ${{ github.sha }}
-Автор: ${{ github.actor }}
+Коммит: $COMMIT
+Автор: $ACTOR
 
 🐳 Docker:
-Образ: ${{ secrets.DOCKERHUB_USERNAME }}/my-web-app:latest
+Образ: $USERNAME/my-web-app:latest
 
 ✔️ Код получен
 ✔️ Docker собран
 ✔️ Образ загружен
 
-🔗 Открыть: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --data-urlencode "parse_mode=HTML"
+🔗 Открыть: https://github.com/$REPO/actions/runs/$RUN_ID"
+          curl -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage \
+            --data-urlencode "chat_id=$CHAT_ID" \
+            --data-urlencode "text=$TEXT"
 
       - name: Notify Telegram on failure
         if: ${{ failure() }}
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          REPO: ${{ github.repository }}
+          COMMIT: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          RUN_ID: ${{ github.run_id }}
         run: |
-          curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --data-urlencode "text=🛑 CI Pipeline упал!
+          TEXT="🛑 CI Pipeline упал!
 
 ⚠️ Внимание: Сборка Docker-образа завершилась с ошибкой
 
 📊 Детали:
-Репозиторий: ${{ github.repository }}
+Репозиторий: $REPO
 Ветка: main
-Коммит: ${{ github.sha }}
-Автор: ${{ github.actor }}
+Коммит: $COMMIT
+Автор: $ACTOR
 
 ❌ Статус:
 ❌ Docker НЕ собран
@@ -78,5 +91,7 @@ jobs:
 2️⃣ Исправить Dockerfile
 3️⃣ Запушить исправления
 
-🔗 Открыть: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --data-urlencode "parse_mode=HTML"
+🔗 Открыть: https://github.com/$REPO/actions/runs/$RUN_ID"
+          curl -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage \
+            --data-urlencode "chat_id=$CHAT_ID" \
+            --data-urlencode "text=$TEXT"
