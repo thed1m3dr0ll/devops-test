@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  web:
+    # собираю образ из локального Dockerfile в корне проекта
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # даю контейнеру понятное имя для удобства в docker ps и логах
+    container_name: devops-test-web
+
+    # публикую контейнерный порт 80 на 8080 хоста
+    ports:
+      - "8080:80"
+
+    # перезапускаю контейнер, если он случайно упал
+    restart: unless-stopped
