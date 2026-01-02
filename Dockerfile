@@ -1,5 +1,5 @@
 # базовый образ nginx на alpine для лёгкого и предсказуемого контейнера
-FROM nginx:broken-image-xyz
+FROM nginx:alpine
 
 # рабочая директория совпадает с корнем статичных файлов nginx
 WORKDIR /usr/share/nginx/html
@@ -15,6 +15,7 @@ EXPOSE 80
 
 # запускаю nginx в foreground, чтобы контейнер не завершался сразу после старта
 CMD ["nginx", "-g", "daemon off;"]
+
 
 
 
