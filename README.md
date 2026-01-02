@@ -248,4 +248,83 @@ git commit --amend -m "Refined junior-task implementation"
 - 🔙 Вернуться на `feature/junior-task` и восстановить изменения из стеша.
 - ✏️ Переименовать последний коммит с использованием `git commit --amend`.
 - 📸 Зафиксировать результат скриншотом в `docs/screenshots/B2`.
+---
 
+## 🚀 B3 — CI/CD с Docker Hub и Telegram
+
+Полная автоматизация: GitHub Actions собирает Docker-образ, пушит его в Docker Hub и отправляет уведомления в Telegram.
+
+---
+
+### 🛠 Стек B3
+
+- 🐙 **GitHub Actions** — CI/CD pipeline.
+- 🐳 **Docker Hub** — реестр образов.
+- 📱 **Telegram Bot API** — уведомления.
+- 🔑 **GitHub Secrets** — безопасное хранение токенов.
+
+---
+
+### 📋 Workflow (`.github/workflows/ci.yml`)
+
+**Триггер:** `push` в ветку `main`
+
+**Шаги:**
+1. Checkout репозитория.
+2. Set up Docker Buildx.
+3. Login в Docker Hub.
+4. Build and push образа в Docker Hub.
+5. Notify Telegram on success — ✅ сообщение при успехе.
+6. Notify Telegram on failure — 🛑 сообщение при ошибке.
+
+---
+
+### 📱 Telegram уведомления
+
+**Требуемые секреты в GitHub:**
+- `TELEGRAM_BOT_TOKEN` — токен бота.
+- `TELEGRAM_CHAT_ID` — ID чата.
+- `DOCKERHUB_USERNAME` — логин Docker Hub.
+- `DOCKERHUB_TOKEN` — токен Docker Hub.
+
+---
+
+### 🖼️ Screenshots B3
+
+<p align="center"><em>Telegram Notifications (Success & Failure)</em></p>
+<p align="center"><img src="docs/screenshots/B3/B3-telegram-failure-success.jpg" alt="B3 Telegram notifications" width="75%"></p>
+
+---
+
+### 📋 Кратко о задании B3
+
+- 🔄 GitHub Actions workflow для CI/CD.
+- 🐳 Собирает Docker-образ и загружает в Docker Hub.
+- 📱 Отправляет Telegram-уведомления (успех/ошибка).
+- 🔑 Использует GitHub Secrets для токенов.
+- 📸 Скриншоты в `docs/screenshots/B3/`.
+
+---
+
+### 🤖 CI/CD поток для Docker-образа
+
+1. 📝 **Пуш разработчика** в ветку `main`
+2. 🤖 **Запуск CI/CD пайплайна** (GitHub Actions / GitLab CI)
+3. 📄 **Checkout кода** репозитория
+4. 🧪 **Запуск тестов**
+   - ❌ При падении тестов → 📢 отправка уведомления в Telegram о провале
+   - ✅ При успешных тестах → переход к следующему шагу
+5. 🛠 **Сборка Docker-образа**
+6. 🔐 **Логин в Docker Hub** (или другой реестр)
+7. 🐳 **Пуш Docker-образа** в реестр
+8. ✅❌ **Проверка статуса сборки/публикации**
+   - ✅ Успех → 📢 отправка уведомления в Telegram об успешном деплое
+   - ❌ Ошибка → 📢 отправка уведомления в Telegram о проблеме
+
+     ---
+     
+## ✅ Итого: A1 + B1 + B2 + B3
+
+---
+
+Все задания выполнены! 🎉
