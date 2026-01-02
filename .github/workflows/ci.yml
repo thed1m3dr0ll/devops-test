@@ -31,67 +31,30 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-web-app:latest
 
-      - name: Notify Telegram on success
-        if: ${{ success() }}
-        env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          REPO: ${{ github.repository }}
-          COMMIT: ${{ github.sha }}
-          ACTOR: ${{ github.actor }}
-          RUN_ID: ${{ github.run_id }}
-          USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      - name: Send Telegram notification
+        if: always()
         run: |
-          TEXT="✅ CI Pipeline завершён успешно!
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS="✅ УСПЕХ"
+            EMOJI="✅"
+            TEXT="$EMOJI CI Pipeline завершён успешно! Образ загружен в Docker Hub."
+          else
+            STATUS="🛑 ОШИБКА"
+            EMOJI="🛑"
+            TEXT="$EMOJI CI Pipeline упал! Проверь логи."
+          fi
+          
+          FULL_TEXT="$EMOJI Skatinov_dev DevOps CI
+          
+$TEXT
 
-📊 Детали:
-Репозиторий: $REPO
+Репозиторий: ${{ github.repository }}
 Ветка: main
-Коммит: $COMMIT
-Автор: $ACTOR
+Коммит: ${{ github.sha }}
+Автор: ${{ github.actor }}
 
-🐳 Docker:
-Образ: $USERNAME/my-web-app:latest
-
-✔️ Код получен
-✔️ Docker собран
-✔️ Образ загружен
-
-🔗 Открыть: https://github.com/$REPO/actions/runs/$RUN_ID"
-          curl -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage \
-            --data-urlencode "chat_id=$CHAT_ID" \
-            --data-urlencode "text=$TEXT"
-
-      - name: Notify Telegram on failure
-        if: ${{ failure() }}
-        env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          REPO: ${{ github.repository }}
-          COMMIT: ${{ github.sha }}
-          ACTOR: ${{ github.actor }}
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          TEXT="🛑 CI Pipeline упал!
-
-⚠️ Внимание: Сборка Docker-образа завершилась с ошибкой
-
-📊 Детали:
-Репозиторий: $REPO
-Ветка: main
-Коммит: $COMMIT
-Автор: $ACTOR
-
-❌ Статус:
-❌ Docker НЕ собран
-❌ Образ НЕ загружен
-
-💡 Действие:
-1️⃣ Проверить логи
-2️⃣ Исправить Dockerfile
-3️⃣ Запушить исправления
-
-🔗 Открыть: https://github.com/$REPO/actions/runs/$RUN_ID"
-          curl -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage \
-            --data-urlencode "chat_id=$CHAT_ID" \
-            --data-urlencode "text=$TEXT"
+🔗 Логи: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "text=$FULL_TEXT"
