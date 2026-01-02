@@ -249,6 +249,3 @@ git commit --amend -m "Refined junior-task implementation"
 - ✏️ Переименовать последний коммит с использованием `git commit --amend`.
 - 📸 Зафиксировать результат скриншотом в `docs/screenshots/B2`.
 
-<p align="center"><em>Screenshots B2</em></p>
-<p align="center"><img src="docs/screenshots/B2/B2-git-scenario-complete.jpg" alt="B2 git scenario" width="75%"></p>
-
