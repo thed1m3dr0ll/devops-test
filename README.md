@@ -1,10 +1,10 @@
 # 🚀 DevOps test — Docker Nginx (A1)
 
-Небольшое, тз от Яндекс_Браузер: статический сайт **"Hello from Skatinov_dev"** на Nginx в Docker-контейнере, запущенный через Docker Compose под WSL Ubuntu 24.04.
+Небольшой, но боевой DevOps-проект: статический сайт **"Hello from Skatinov_dev"** на Nginx в Docker-контейнере, запущенный через Docker Compose под WSL Ubuntu 24.04.
 
 ---
 
-## 📦 Описание
+## 📄 Описание
 
 - Контейнер с Nginx на базе лёгкого образа `nginx:alpine`.
 - Статическая страница `index.html` с текстом **Hello from Skatinov_dev**.
@@ -15,10 +15,10 @@
 
 ## 🛠 Стек и требования
 
-- 🛫 WSL **Ubuntu 24.04**
+- 🖥️ WSL **Ubuntu 24.04**
 - 🐳 **Docker Engine**
-- 📆 **Docker Compose**
-- 🜐 Браузер (проверка `http://localhost:8080`)
+- 📦 **Docker Compose**
+- 🌐 Браузер (проверка `http://localhost:8080`)
 
 ---
 
@@ -29,7 +29,7 @@ devops-test
 ├── Dockerfile
 ├── docker-compose.yml
 ├── src
-│   └── index.html        # Страница "Hello from Skatinovdev"
+│   └── index.html        # Страница "Hello from Skatinov_dev"
 └── docs
     └── screenshots
         └── A1            # Скриншоты docker-compose и браузера
@@ -40,7 +40,7 @@ devops-test
 
 ---
 
-## 🚱 Dockerfile
+## 🐳 Dockerfile
 
 ```dockerfile
 FROM nginx:alpine
@@ -100,7 +100,7 @@ docker-compose down
 
 ---
 
-## 🛶 Screenshots A1
+## 🖼️ Screenshots A1
 
 Ниже скриншоты, подтверждающие выполнение задания A1:
 
@@ -119,11 +119,76 @@ docker-compose down
 
 ## 📋 Кратко о задании A1
 
-- 🚱 Собрать Docker-образ на базе `nginx:alpine` с кастомным `index.html`.
+- 🐳 Собрать Docker-образ на базе `nginx:alpine` с кастомным `index.html`.
 - 🌐 Поднять сервис через `docker-compose` с пробросом порта `8080 → 80`.
-- 🔍 Зафиксировать результат скриншотами (`up`, `ps`, `curl`, браузер) в `docs/screenshots/A1`.
+- 📸 Зафиксировать результат скриншотами (`up`, `ps`, `curl`, браузер) в `docs/screenshots/A1`.
 - 📝 Описать всё в этом README.md и выложить в GitHub репозиторий `devops-test`.
 
 ---
 
+## 🧹 B1 — Bash‚скрипт очистки логов
 
+Небольшой помощник для безопасной очистки старых `.log`‚файлов в заданной директории с подтверждением перед удалением.
+
+---
+
+### 🧩 Назначение скрипта
+
+- Ищет в указанной папке все файлы с расширением `.log`, которые старше заданного количества дней.
+- Показывает список найденных файлов и их общее количество, затем спрашивает, удалять ли их.
+- При ответе `y` удаляет только отобранные файлы, при `n` — ничего не меняет и завершает работу.
+
+---
+
+### 📁 Расположение в проекте
+
+```
+devops-test
+├── scripts
+│   └── cleanoldlogs.sh   # Скрипт очистки старых .log-файлов
+└── docs
+    └── screenshots
+        └── B1            # Скриншоты работы скрипта
+```
+
+---
+
+### ▶️ Использование
+
+```
+# Общий формат
+./scripts/cleanoldlogs.sh /path/to/logs N
+
+# Пример: удалить .log-файлы старше 30 дней
+./scripts/cleanoldlogs.sh /var/log/myapp 30
+```
+
+Где:
+- `/path/to/logs` — путь к директории с логами;
+- `N` — количество дней, старше которого `.log` считаются устаревшими.
+
+---
+
+### 🔍 Поведение скрипта
+
+- При отсутствии или некорректных аргументах выводит подсказку по использованию и завершает работу.
+- Если подходящих `.log`‚файлов нет, сообщает об этом и ничего не удаляет.
+- Перед удалением всегда выводит список файлов и запрашивает подтверждение: `Удалить эти файлы? (Y/N)`.
+
+---
+
+### 🖼️ Screenshots B1
+
+<p align="center"><em>Screenshots B1</em></p>
+<p align="center"><img src="docs/screenshots/B1/B1-script-created.jpg" alt="B1 script created" width="75%"></p>
+<p align="center"><img src="docs/screenshots/B1/B1-script-test.jpg" alt="B1 script test" width="75%"></p>
+
+---
+
+## 📋 Кратко о задании B1
+
+- 🧹 Создать bash-скрипт `cleanoldlogs.sh`, который ищет и удаляет `.log`-файлы старше заданного количества дней с подтверждением.
+- 🧩 Скрипт принимает два аргумента: путь к директории и количество дней.
+- ✅ Перед удалением выводит список найденных файлов и запрашивает подтверждение (`Y/N`).
+- 📸 Зафиксировать результат скриншотами (`help`, `demo`) в `docs/screenshots/B1`.
+- 📝 Описать всё в этом README.md и выложить в GitHub репозиторий `devops-test`.
