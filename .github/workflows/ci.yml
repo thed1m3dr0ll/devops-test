@@ -34,29 +34,49 @@ jobs:
       - name: Notify Telegram on success
         if: ${{ success() }}
         run: |
-          cat > /tmp/notify.json <<'EOF'
-          {
-            "chat_id": "${{ secrets.TELEGRAM_CHAT_ID }}",
-            "text": "<b>✅ CI Pipeline завершён успешно!</b>\n\n<b>📊 Детали:</b>\nde>Репозиторий:</code> <b>${{ github.repository }}</b>\nde>Ветка:</code> <b>main</b>\nde>Коммит:</code> <b>${{ github.sha }}</b>\nde>Автор:</code> <b>${{ github.actor }}</b>\n\n<b>🐳 Docker:</b>\nde>Образ:</code> <b>${{ secrets.DOCKERHUB_USERNAME }}/my-web-app:latest</b>\nde>Статус:</code> <i>успешно загружен в Docker Hub</i>\n\n<b>🎯 Результаты:</b>\n✔️ Код получен\n✔️ Docker собран\n✔️ Образ загружен\n\n<b>🔗 Ссылка:</b> <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">Открыть workflow</a>",
-            "parse_mode": "HTML",
-            "disable_web_page_preview": true
-          }
-          EOF
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -H "Content-Type: application/json" \
-            -d @/tmp/notify.json
+          curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "text=✅ CI Pipeline завершён успешно!
+
+📊 Детали:
+Репозиторий: ${{ github.repository }}
+Ветка: main
+Коммит: ${{ github.sha }}
+Автор: ${{ github.actor }}
+
+🐳 Docker:
+Образ: ${{ secrets.DOCKERHUB_USERNAME }}/my-web-app:latest
+
+✔️ Код получен
+✔️ Docker собран
+✔️ Образ загружен
+
+🔗 Открыть: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --data-urlencode "parse_mode=HTML"
 
       - name: Notify Telegram on failure
         if: ${{ failure() }}
         run: |
-          cat > /tmp/notify.json <<'EOF'
-          {
-            "chat_id": "${{ secrets.TELEGRAM_CHAT_ID }}",
-            "text": "<b>🛑 CI Pipeline упал!</b>\n\n<b>⚠️ Внимание:</b> Сборка Docker-образа завершилась с ошибкой\n\n<b>📊 Детали:</b>\nde>Репозиторий:</code> <b>${{ github.repository }}</b>\nde>Ветка:</code> <b>main</b>\nde>Коммит:</code> <b>${{ github.sha }}</b>\nde>Автор:</code> <b>${{ github.actor }}</b>\n\n<b>🔴 Ошибка на шаге:</b>\nde>Build and push image</code>\n\n<b>❌ Статус:</b>\n❌ Код получен\n❌ Docker НЕ собран (ошибка)\n❌ Образ НЕ загружен\n\n<b>💡 Действие:</b>\n1️⃣ Проверить логи\n2️⃣ Исправить Dockerfile\n3️⃣ Запушить исправления\n\n<b>🔗 Ссылка:</b> <a href=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\">Открыть workflow</a>",
-            "parse_mode": "HTML",
-            "disable_web_page_preview": true
-          }
-          EOF
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -H "Content-Type: application/json" \
-            -d @/tmp/notify.json
+          curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "text=🛑 CI Pipeline упал!
+
+⚠️ Внимание: Сборка Docker-образа завершилась с ошибкой
+
+📊 Детали:
+Репозиторий: ${{ github.repository }}
+Ветка: main
+Коммит: ${{ github.sha }}
+Автор: ${{ github.actor }}
+
+❌ Статус:
+❌ Docker НЕ собран
+❌ Образ НЕ загружен
+
+💡 Действие:
+1️⃣ Проверить логи
+2️⃣ Исправить Dockerfile
+3️⃣ Запушить исправления
+
+🔗 Открыть: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --data-urlencode "parse_mode=HTML"
