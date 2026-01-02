@@ -23,7 +23,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push image
-        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -31,30 +30,16 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-web-app:latest
 
-      - name: Send Telegram notification
-        if: always()
+      - name: Notify success
+        if: success()
         run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            STATUS="✅ УСПЕХ"
-            EMOJI="✅"
-            TEXT="$EMOJI CI Pipeline завершён успешно! Образ загружен в Docker Hub."
-          else
-            STATUS="🛑 ОШИБКА"
-            EMOJI="🛑"
-            TEXT="$EMOJI CI Pipeline упал! Проверь логи."
-          fi
-          
-          FULL_TEXT="$EMOJI Skatinov_dev DevOps CI
-          
-$TEXT
-
-Репозиторий: ${{ github.repository }}
-Ветка: main
-Коммит: ${{ github.sha }}
-Автор: ${{ github.actor }}
-
-🔗 Логи: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
-          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
             --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --data-urlencode "text=$FULL_TEXT"
+            --data-urlencode "text=✅ CI успешно завершён! Образ загружен в Docker Hub."
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          curl -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "text=🛑 CI упал! Проверь логи https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
