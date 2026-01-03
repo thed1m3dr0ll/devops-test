@@ -18,7 +18,7 @@
 - 🖥️ WSL **Ubuntu 24.04**
 - 🐳 **Docker Engine**
 - 📦 **Docker Compose**
-- 🌐 Браузер (проверка `http://localhost:8080`)
+- 🌐 **Браузер** (проверка `http://localhost:8080`)
 
 ---
 
@@ -33,6 +33,9 @@ devops-test
 └── docs
     └── screenshots
         └── A1            # Скриншоты docker-compose и браузера
+        └── B1            # Скриншоты работы скрипта
+        └── B2            # Скриншоты Git Bash со сценарием работы с веткой
+        └── B3            # уведомления Telegram‑бота о падении и успешном завершении CI
 ```
 
 - `Dockerfile` — сборка образа на базе `nginx:alpine` и копирование `src/index.html` в веб-каталог Nginx.
@@ -100,7 +103,7 @@ docker-compose down
 
 ---
 
-## 🖼️ Screenshots A1
+## 🖼️ Скриншоты A1
 
 Ниже скриншоты, подтверждающие выполнение задания A1:
 
@@ -132,7 +135,7 @@ docker-compose down
 
 ---
 
-### 🧩 Назначение скрипта
+## 🧩 Назначение скрипта
 
 - Ищет в указанной папке все файлы с расширением `.log`, которые старше заданного количества дней.
 - Показывает список найденных файлов и их общее количество, затем спрашивает, удалять ли их.
@@ -177,9 +180,9 @@ devops-test
 
 ---
 
-### 🖼️ Screenshots B1
+### 🖼️ Скриншоты B1
 
-<p align="center"><em>Screenshots B1</em></p>
+<p align="center"><em>screenshots B1</em></p>
 <p align="center"><img src="docs/screenshots/B1/B1-script-created.jpg" alt="B1 script created" width="75%"></p>
 <p align="center"><img src="docs/screenshots/B1/B1-script-test.jpg" alt="B1 script test" width="75%"></p>
 
@@ -195,59 +198,74 @@ devops-test
 
 ---
 
-## 🚀 Запуск Git сценария B2
-Git сценарий предполагает работу с ветками, стешем и переименованием коммитов:
+## 🚀 B2 — Git‑сценарий с веткой, stash и переименованием коммита
+Сценарий демонстрирует, как сохранить незакоммиченные изменения через git stash, переключиться на main для горячего фикса, затем вернуться в feature/junior-task и переименовать последний коммит с помощью git commit --amend.
 
-
-
-## 🚀 Выполнение Git сценария B2
-
-Описание выполнения гит-сценария с работой в нескольких ветках, стешем и переименованием коммитов:
-
-```bash
-# Шаг 1: создать новую ветку feature/junior-task
-git checkout -b feature/junior-task
-
-# Шаг 2: сделать изменения в ветке и скоммитить
-echo "исправленная фича" > feature_changes.txt
-git add feature_changes.txt
-git commit -m "Implement junior-task feature"
-
-# Шаг 3: сохранить некоммиттед изменения
-git stash
-
-# Шаг 4: переключиться на main
-git checkout main
-
-# Шаг 5: сделать вместе исправления на main
-echo "сборки" > main_changes.txt
-git add main_changes.txt
-git commit -m "Update main branch"
-
-# Шаг 6: вернуться на feature ветку
-git checkout feature/junior-task
-
-# Шаг 7: восстановить сохранённые при стеш изменения
-git stash pop
-
-# Шаг 8: переименовать последний коммит
-git commit --amend -m "Refined junior-task implementation"
-```
-
-По завершении всех шагов приложен скриншот, который показывает все этапы эксекуции.
-
-<p align="center"><em>Screenshots B2</em></p>
-
-<p align="center"><img src="docs/screenshots/B2/B2-git-scenario-complete.jpg" alt="B2 git scenario" width="75%"></p>
 ---
 
-## 📋 Кратко о задании B2
+## 📁 Структура проекта
 
-- 🔀 Создать ветку `feature/junior-task` с коммитом и сохранить изменения в стеш.
-- 🔄 Переключиться на `main`, внести изменения и коммитить.
-- 🔙 Вернуться на `feature/junior-task` и восстановить изменения из стеша.
-- ✏️ Переименовать последний коммит с использованием `git commit --amend`.
-- 📸 Зафиксировать результат скриншотом в `docs/screenshots/B2`.
+```
+devops-test
+├── feature_work.txt          # Файл с изменениями в feature/junior-task
+├── main_fix.txt              # Файл с фиксом на main
+└── docs
+    └── screenshots
+        └── B2
+            └── B2-git-scenario-complete.jpg
+```
+
+- Скриншот `B2-git-scenario-complete.jpg` показывает все ключевые шаги: stash, переключение между ветками, коммиты и итоговый `git log --oneline`.
+  
+---
+
+## ▶️ Выполнение Git‑сценария B2
+
+```bash
+# 1. Перейти в feature/junior-task и сделать незакоммиченные изменения
+git checkout feature/junior-task
+echo "временное изменение $(date)" >> feature_work.txt
+git status
+
+# 2. Сохранить незакоммиченные изменения в stash
+git stash
+git status
+
+# 3. Переключиться на main и сделать горячий фикс
+git checkout main
+echo "горячий фикс $(date)" >> main_fix.txt
+git add main_fix.txt
+git commit -m "Горячий фикс на main для B2"
+git log --oneline -3
+
+# 4. Вернуться в feature/junior-task и восстановить stash
+git checkout feature/junior-task
+git stash pop
+git status
+
+# 5. Зафиксировать изменения и переименовать последний коммит
+git add feature_work.txt
+git commit -m "Временный коммит junior-task"
+git commit --amend -m "Доработанная реализация junior-task"
+git log --oneline -5
+```
+В результате:
+
+незакоммиченные изменения не теряются при переключении ветки, так как временно сохраняются в stash;
+​
+ветка `main` получает отдельный «горячий» фикс;
+
+в `feature/junior-task` изменения восстанавливаются, коммит создаётся и затем переименовывается через `git commit --amend`, что отражается в истории `git log --oneline`.
+
+---
+
+🖼️ **Скриншот B2**
+<p align="center"><em>Screenshots B2</em></p> <p align="center"><img src="docs/screenshots/B2/B2-git-scenario-complete.jpg" alt="B2 git scenario" width="75%"></p>
+
+✅ `B2-git-scenario-complete.jpg` — полный вывод Git Bash со сценарием: попытка переключения с незакоммичеными изменениями, `git stash`, фиксы на `main`, возврат в `feature/junior-task`, `git stash pop`, коммит и `git commit --amend` с итоговой историей `git log --oneline`.
+​
+
+
 ---
 
 ## 🚀 B3 — CI/CD с Docker Hub и Telegram
@@ -289,7 +307,7 @@ git commit --amend -m "Refined junior-task implementation"
 
 ---
 
-### 🖼️ Screenshots B3
+### 🖼️ Скриншот B3
 
 <p align="center"><em>Telegram Notifications (Success & Failure)</em></p>
 <p align="center"><img src="docs/screenshots/B3/B3-telegram-failure-success.jpg" alt="B3 Telegram notifications" width="75%"></p>
